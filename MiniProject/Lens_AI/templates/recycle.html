@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+{% set active = "recycle" %}
+<div class="page">
+  <p class="section-title">Recycle Bin ({{ records|length }})</p>
+
+  {% if records %}
+    {% for rec in records %}
+    <div class="evidence-item">
+      {% set fname = rec.image_path.replace('\\','/').split('/')[-1] %}
+      <img src="/image/{{ fname }}" alt="Evidence"
+           onerror="this.style.display='none'">
+
+      <div class="evidence-meta">
+        <span class="evidence-time">{{ rec.timestamp }}</span>
+        <span class="badge badge-{{ rec.severity.lower() }}">{{ rec.severity }}</span>
+      </div>
+
+      <div class="evidence-actions">
+        <a href="/recycle/{{ rec.id }}/restore"   class="btn btn-green">♻ Restore</a>
+        <a href="/recycle/{{ rec.id }}/permanent" class="btn btn-red"
+           onclick="return confirm('Permanently delete? This cannot be undone.')">🗑 Delete Forever</a>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty">
+      <div class="icon">🗑</div>
+      <p>Recycle bin is empty</p>
+    </div>
+  {% endif %}
+</div>
+<script>setTimeout(() => location.reload(), 10000);</script>
+{% endblock %}

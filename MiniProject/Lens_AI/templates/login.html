@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0a0a0f">
+<title>ScreenSentry — Login</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0a0a0f; color:#e8e8ff;
+    font-family:'Segoe UI',Arial,sans-serif;
+    min-height:100vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; padding:24px;
+  }
+  .shield { font-size:4rem; margin-bottom:8px; }
+  h1 { font-size:1.6rem; font-weight:700; color:#00d4ff; margin-bottom:4px; }
+  .sub { font-size:0.85rem; color:#4a4a6a; margin-bottom:36px; }
+
+  .card {
+    background:#12122a; border-radius:16px; padding:28px 24px;
+    width:100%; max-width:380px; border:1px solid #1a1a3a;
+  }
+  .field-label { font-size:0.72rem; color:#00d4ff; text-transform:uppercase;
+                 letter-spacing:1px; margin-bottom:6px; font-weight:700; }
+  .field-wrap { border:1px solid #4a4a6a; border-radius:10px; overflow:hidden;
+                margin-bottom:18px; background:#1a1a2e; }
+  .field-wrap:focus-within { border-color:#00d4ff; }
+  input {
+    width:100%; padding:14px 16px; background:transparent;
+    border:none; outline:none; color:#e8e8ff; font-size:1rem;
+  }
+  .error {
+    background:#ff336622; border:1px solid #ff3366; border-radius:8px;
+    padding:10px 14px; font-size:0.85rem; color:#ff3366;
+    margin-bottom:16px; text-align:center;
+  }
+  .btn-login {
+    width:100%; padding:15px; background:linear-gradient(135deg,#7b2fff,#00d4ff);
+    border:none; border-radius:10px; color:#fff; font-size:1rem;
+    font-weight:700; cursor:pointer; letter-spacing:1px;
+  }
+  .btn-login:active { opacity:0.85; }
+  .footer { margin-top:24px; font-size:0.75rem; color:#4a4a6a; text-align:center; }
+</style>
+</head>
+<body>
+  <div class="shield">🛡</div>
+  <h1>ScreenSentry</h1>
+  <p class="sub">Admin Portal — Authorized Access Only</p>
+
+  <div class="card">
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+      <div class="field-label">Username</div>
+      <div class="field-wrap">
+        <input type="text" name="username" placeholder="Enter username"
+               autocomplete="off" autocapitalize="none" required>
+      </div>
+
+      <div class="field-label">Password</div>
+      <div class="field-wrap">
+        <input type="password" name="password" placeholder="Enter password" required>
+      </div>
+
+      <button type="submit" class="btn-login">LOGIN →</button>
+    </form>
+  </div>
+
+  <p class="footer">ScreenSentry v2.0 • Secured with bcrypt</p>
+</body>
+</html>

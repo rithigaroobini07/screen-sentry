@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0a0a0f">
+<title>ScreenSentry Admin</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  :root {
+    --bg:      #0a0a0f;
+    --bg2:     #0f0f1a;
+    --bg3:     #1a1a2e;
+    --bg4:     #16213e;
+    --card:    #12122a;
+    --accent:  #00d4ff;
+    --accent2: #7b2fff;
+    --green:   #00ff88;
+    --red:     #ff3366;
+    --orange:  #ff9500;
+    --white:   #e8e8ff;
+    --gray:    #4a4a6a;
+  }
+  body { background:var(--bg); color:var(--white); font-family:'Segoe UI',Arial,sans-serif; min-height:100vh; }
+
+  /* Nav bar */
+  .navbar {
+    background:var(--bg4);
+    padding:14px 18px;
+    display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:100;
+    border-bottom:1px solid #1a1a3a;
+  }
+  .navbar .brand { font-size:1.1rem; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:8px; }
+  .navbar .logout { color:var(--gray); font-size:0.85rem; text-decoration:none; padding:6px 12px;
+                    border:1px solid var(--gray); border-radius:20px; }
+
+  /* Bottom nav */
+  .bottom-nav {
+    position:fixed; bottom:0; left:0; right:0;
+    background:var(--bg4); border-top:1px solid #1a1a3a;
+    display:flex; z-index:100;
+  }
+  .bottom-nav a {
+    flex:1; text-align:center; padding:10px 4px 8px;
+    color:var(--gray); text-decoration:none; font-size:0.7rem;
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+  }
+  .bottom-nav a.active { color:var(--accent); }
+  .bottom-nav a span.icon { font-size:1.3rem; }
+
+  /* Page content */
+  .page { padding:16px 14px 80px; }
+
+  /* Cards */
+  .card { background:var(--card); border-radius:12px; padding:16px; margin-bottom:14px;
+          border:1px solid #1a1a3a; }
+  .card-title { font-size:0.75rem; color:var(--gray); text-transform:uppercase;
+                letter-spacing:1px; margin-bottom:6px; }
+  .card-value { font-size:2rem; font-weight:700; }
+
+  /* Stat grid */
+  .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+
+  /* Badge */
+  .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:600; }
+  .badge-high   { background:#ff336622; color:var(--red);    border:1px solid var(--red); }
+  .badge-medium { background:#ff950022; color:var(--orange); border:1px solid var(--orange); }
+  .badge-low    { background:#00ff8822; color:var(--green);  border:1px solid var(--green); }
+  .badge-confirmed  { background:#00ff8822; color:var(--green); border:1px solid var(--green); }
+  .badge-pending    { background:#00d4ff22; color:var(--accent); border:1px solid var(--accent); }
+  .badge-falsealarm { background:#ff336622; color:var(--red); border:1px solid var(--red); }
+
+  /* Buttons */
+  .btn { display:inline-block; padding:9px 18px; border-radius:8px; font-size:0.85rem;
+         font-weight:600; text-decoration:none; border:none; cursor:pointer; text-align:center; }
+  .btn-accent  { background:var(--accent2); color:var(--white); }
+  .btn-green   { background:#1b5e20; color:var(--white); }
+  .btn-red     { background:#7f0000; color:var(--white); }
+  .btn-gray    { background:var(--bg3); color:var(--white); }
+  .btn-block   { display:block; width:100%; margin-bottom:8px; }
+
+  /* Evidence item */
+  .evidence-item { background:var(--card); border-radius:12px; padding:14px;
+                   margin-bottom:12px; border:1px solid #1a1a3a; }
+  .evidence-item img { width:100%; border-radius:8px; margin-bottom:10px; max-height:180px; object-fit:cover; }
+  .evidence-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .evidence-time { font-size:0.78rem; color:var(--gray); }
+  .evidence-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .evidence-actions .btn { padding:7px 14px; font-size:0.78rem; }
+
+  /* Log item */
+  .log-item { background:var(--card); border-radius:10px; padding:12px;
+              margin-bottom:10px; border-left:3px solid var(--accent2); }
+  .log-action { font-size:0.9rem; font-weight:600; color:var(--white); }
+  .log-detail { font-size:0.78rem; color:var(--gray); margin-top:3px; }
+  .log-time   { font-size:0.72rem; color:var(--accent); margin-top:4px; }
+
+  /* Section title */
+  .section-title { font-size:0.8rem; color:var(--accent); text-transform:uppercase;
+                   letter-spacing:1.5px; margin-bottom:12px; font-weight:700; }
+
+  /* Empty state */
+  .empty { text-align:center; padding:50px 20px; color:var(--gray); }
+  .empty .icon { font-size:3rem; margin-bottom:12px; }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="brand">🛡 ScreenSentry</div>
+  <a href="/logout" class="logout">Logout</a>
+</nav>
+
+{% block content %}{% endblock %}
+
+<nav class="bottom-nav">
+  <a href="/dashboard" class="{% if active=='dashboard' %}active{% endif %}">
+    <span class="icon">📊</span>Dashboard
+  </a>
+  <a href="/evidence" class="{% if active=='evidence' %}active{% endif %}">
+    <span class="icon">📋</span>Evidence
+  </a>
+  <a href="/recycle" class="{% if active=='recycle' %}active{% endif %}">
+    <span class="icon">🗑</span>Recycle
+  </a>
+  <a href="/audit" class="{% if active=='audit' %}active{% endif %}">
+    <span class="icon">📜</span>Audit
+  </a>
+</nav>
+</body>
+</html>

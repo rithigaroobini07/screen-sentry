@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+{% set active = "audit" %}
+<div class="page">
+  <p class="section-title">Audit Log</p>
+
+  {% if logs %}
+    {% for log in logs %}
+    <div class="log-item">
+      <div class="log-action">{{ log.action }}</div>
+      {% if log.details %}
+      <div class="log-detail">{{ log.details }}</div>
+      {% endif %}
+      <div class="log-time">{{ log.timestamp }}</div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty">
+      <div class="icon">📜</div>
+      <p>No audit logs yet</p>
+    </div>
+  {% endif %}
+</div>
+<script>setTimeout(() => location.reload(), 15000);</script>
+{% endblock %}

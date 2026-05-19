@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+{% set active = "dashboard" %}
+<div class="page">
+  <p class="section-title">Overview</p>
+
+  <div class="stat-grid">
+    <div class="card">
+      <div class="card-title">Total Threats</div>
+      <div class="card-value" style="color:#00d4ff">{{ stats.total }}</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Confirmed</div>
+      <div class="card-value" style="color:#ff3366">{{ stats.by_status.get('Confirmed', 0) }}</div>
+    </div>
+    <div class="card">
+      <div class="card-title">False Alarms</div>
+      <div class="card-value" style="color:#ff9500">{{ stats.by_status.get('False Alarm', 0) }}</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Pending</div>
+      <div class="card-value" style="color:#00ff88">{{ stats.by_status.get('Pending', 0) }}</div>
+    </div>
+  </div>
+
+  <p class="section-title">Severity Breakdown</p>
+  <div class="stat-grid">
+    <div class="card">
+      <div class="card-title">High</div>
+      <div class="card-value" style="color:#ff3366">{{ stats.by_severity.get('High', 0) }}</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Medium</div>
+      <div class="card-value" style="color:#ff9500">{{ stats.by_severity.get('Medium', 0) }}</div>
+    </div>
+  </div>
+
+  <p class="section-title">Last 7 Days</p>
+  <div class="card">
+    {% if stats.by_date %}
+      {% for date, count in stats.by_date %}
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <span style="font-size:0.78rem; color:#4a4a6a; width:55px;">{{ date[-5:] }}</span>
+        <div style="flex:1; background:#1a1a2e; border-radius:4px; height:22px; overflow:hidden;">
+          {% set pct = (count / (stats.by_date | map(attribute=1) | max)) * 100 %}
+          <div style="width:{{ pct }}%; height:100%;
+                      background:linear-gradient(90deg,#7b2fff,#00d4ff);
+                      border-radius:4px;"></div>
+        </div>
+        <span style="font-size:0.82rem; font-weight:700; color:#e8e8ff; width:20px;">{{ count }}</span>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty"><div class="icon">📊</div><p>No data yet</p></div>
+    {% endif %}
+  </div>
+
+  <div style="text-align:center; margin-top:8px;">
+    <a href="/evidence" class="btn btn-accent">View Evidence →</a>
+  </div>
+</div>
+
+<script>
+  // Auto refresh every 10 seconds
+  setTimeout(() => location.reload(), 10000);
+</script>
+{% endblock %}
